@@ -1,6 +1,11 @@
 // @ts-check
 /// <reference path="../index.d.ts" />
 
+/**
+ * @typedef {Object} cAdvisorParams - creates a new type named 'SpecialType'
+ * @property {string} headerName
+ */
+
 const metrics = require('prom-client');
 
 const statusCodeCounter = new metrics.Counter({
@@ -38,12 +43,14 @@ const plugin = {
       },
       name: 'cAdvisor',
       policy: (params) => (req, res, next) => {
+        /** @type {cAdvisorParams} */
+        const p = params;
         res.once('finish', () => {
           let cnt;
           if (res.statusCode >= 200 && res.statusCode < 300) {
-            cnt = statusCodeCounter.labels('SUCCESS', res.statusCode.toString(), req.header(params.headerName) || 'anonymous');
+            cnt = statusCodeCounter.labels('SUCCESS', res.statusCode.toString(), req.header(p.headerName) || 'anonymous');
           } else {
-            cnt = statusCodeCounter.labels('FAILED', res.statusCode.toString(), req.header(params.headerName) || 'anonymous');
+            cnt = statusCodeCounter.labels('FAILED', res.statusCode.toString(), req.header(p.headerName) || 'anonymous');
           }
 
           cnt.inc();
