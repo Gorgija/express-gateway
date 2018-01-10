@@ -5,22 +5,23 @@ http:
 #   tls: {}
 admin: # remove this section to disable admin API
   port: 9876
-  hostname: localhost # use 0.0.0.0 to listen on all IPv4 interfaces
+  hostname: 0.0.0.0 # use 0.0.0.0 to listen on all IPv4 interfaces
 apiEndpoints:
   api:
     host: '*'
 serviceEndpoints:
   backend:
-    url: 'http://localhost:9876' # btw this is EG admin API
+    url: 'http://httpbin.org'
 policies:
   - proxy
   - key-auth
+  - cAdvisor
 pipelines:
   adminAPI:
     apiEndpoints:
       - api
     policies:
-      # - key-auth: # uncomment to enable key-auth
+      - cAdvisor:
       - proxy:
           - action:
               serviceEndpoint: backend

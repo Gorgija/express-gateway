@@ -8,9 +8,9 @@ db:
 cli:
   url: http://localhost:9876
 
-#plugins:
-  # express-gateway-plugin-example:
-  #   param1: 'param from system.config' 
+plugins:
+  cAdvisor:
+    package: '../plg/index.js'
 
 crypto:
   cipherKey: sensitiveKey
