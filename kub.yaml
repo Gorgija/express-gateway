@@ -48,7 +48,7 @@ spec:
               mountPath: "/etc/custom-metrics"
       containers:
       - name: eg
-        image: eg:cAdvisor_l
+        image: eg:cAdvisor
         ports:
         -
           containerPort: 8080
