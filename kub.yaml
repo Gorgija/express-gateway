@@ -20,43 +20,42 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: eg
-  annotations:
-    pod.beta.kubernetes.io/init-containers: '[
-        {
-            "name": "setup",
-            "image": "busybox",
-            "imagePullPolicy": "IfNotPresent",
-            "command": ["sh", "-c", "echo \"{\\\"endpoint\\\": \\\"http://$POD_IP:9876/metrics\\\"}\" > /etc/custom-metrics/definition.json"],
-            "env": [{
-              "name": "POD_IP",
-              "valueFrom": {
-                "fieldRef": {
-                  "apiVersion": "v1",
-                  "fieldPath": "status.podIP"
-                }
-              }
-            }],
-            "volumeMounts": [
-                {
-                    "name": "config",
-                    "mountPath": "/etc/custom-metrics"
-                }
-            ]
-        }
-    ]'
 spec:
   replicas: 1
   template:
     metadata:
+      name: eg
       labels:
         app: eg
     spec:
+      initContainers:
+        -
+          name: setup
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - "-c"
+            - 'echo "{\"endpoint\": \"http://$POD_IP:9876/metrics\"}" > /etc/custom-metrics/definition.json'
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/custom-metrics"
       containers:
       - name: eg
-        image: eg:cAdvisor
+        image: eg:cAdvisor_l
         ports:
-        - containerPort: 8080
-        - containerPort: 9876
+        -
+          containerPort: 8080
+          hostPort: 8080
+        -
+          containerPort: 9876
+          hostPort: 9876
         volumeMounts:
         - name: config
           mountPath: /etc/custom-metrics
