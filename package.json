@@ -92,6 +92,7 @@
     "passport-jwt": "^3.0.1",
     "passport-local": "1.0.0",
     "passport-oauth2-client-password": "0.1.2",
+    "prom-client": "^10.2.2",
     "proxy-agent": "^2.1.0",
     "semver": "^5.4.1",
     "superagent": "^3.8.2",
