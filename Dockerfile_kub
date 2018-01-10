@@ -1,5 +1,6 @@
 FROM node:8-alpine
 
+LABEL io.cadvisor.metric.prometheus-http="/etc/custom-metrics/definition.json"
 
 ENV NODE_ENV production
 # this will enable polling, hot-reload will work on docker or network volumes
